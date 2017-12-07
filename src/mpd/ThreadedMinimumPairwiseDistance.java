@@ -9,8 +9,8 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 	public int minimumPairwiseDistance(int[] values, int currentStart, int currentEnd, Answer answer) {
 		
 		int maxThreads = 10000;
-		int numThreads = currentEnd - currentStart/2;
-		int totalThreads = currentEnd - currentStart/2;
+		int numThreads = (currentEnd - currentStart)/2;
+		int totalThreads = (currentEnd - currentStart)/2;
 		
 		Thread[] threadList;
         if (maxThreads <= numThreads) {
