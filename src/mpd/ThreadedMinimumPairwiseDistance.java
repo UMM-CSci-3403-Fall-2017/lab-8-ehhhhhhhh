@@ -10,21 +10,24 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 
     @Override
     public int minimumPairwiseDistance(int[] values) {
-        //throw new UnsupportedOperationException();
         
-    	Answer answer = new Answer();
+    	//Declare the shared answer object
+	Answer answer = new Answer();
         
+	// Create threads for each section of the problem space
         Thread thread1 = new Thread(new LowerLeft(answer, values));
         Thread thread2 = new Thread(new BottomRight(answer, values));
         Thread thread3 = new Thread(new Middle(answer, values));
         Thread thread4 = new Thread(new TopRight(answer, values));
-        
+       
         Thread[] threadList = {thread1, thread2, thread3, thread4};
         
+        // Start the threads	
         for (int i=0; i<4; i++) {
         	threadList[i].start();
         }
         
+	// Wait until all threads are completed to return answer
         for (int i=0; i<4; i++) {
         	try {
         		threadList[i].join();
@@ -38,6 +41,7 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
         
     }
     
+    // Class for the lower left portion of the problem space
     private class LowerLeft implements Runnable {
     	
     	Answer answer;
@@ -60,8 +64,6 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
                 		
                 	}
                         
-                        //cd++;
-        				//System.out.println(cd);
                 }
         }
     	System.out.println("LowerLeft took" + (System.currentTimeMillis() - startTime));
@@ -69,7 +71,7 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
     	
     }
     }
-   
+    // lower right portion of the problem space 
     private class BottomRight implements Runnable {
     	
     	Answer answer;
@@ -91,17 +93,16 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
                 		
                 	}
                         
-                        //cd++;
-        				//System.out.println(cd);
                 }
     		
     		}
-    		System.out.println("BottomRight took" + (System.currentTimeMillis() - startTime));
+    	System.out.println("BottomRight took" + (System.currentTimeMillis() - startTime));
         answer.setAnswer(currentMin);
     	}
     	
     }
-
+    
+    // middle section of the problem space
     private class Middle implements Runnable {
 
         Answer answer;
@@ -121,11 +122,7 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
                         for (int j = i-values.length/2; j < values.length/2; j++) {
                         	if (Math.abs(values[i] - values[j]) < currentMin) {
                         		currentMin = Math.abs(values[i] - values[j]);
-                        		
                         	}
-                                
-                                //cd++;
-                				//System.out.println(cd);
                         }
                 }
                 System.out.println("Middle took" + (System.currentTimeMillis() - startTime));
@@ -133,7 +130,8 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
         }
 
     }
-
+    
+    // top section of the problem space
     private class TopRight implements Runnable {
 
         Answer answer;
@@ -154,11 +152,7 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
                         for (int j = values.length/2; j < i; j++) {
                         	if (Math.abs(values[i] - values[j]) < currentMin) {
                         		currentMin = Math.abs(values[i] - values[j]);
-                        		
                         	}
-                                
-                                //cd++;
-                				//System.out.println(cd);
                         }
                 }
                 System.out.println("TopRight took" + (System.currentTimeMillis() - startTime));
@@ -168,7 +162,7 @@ public class ThreadedMinimumPairwiseDistance implements MinimumPairwiseDistance 
 
     }
 
-
+    // Shared inner class storing minimum pair distance
     private class Answer {
     	
     	private int content;
